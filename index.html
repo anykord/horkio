@@ -1,199 +1,108 @@
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans);background:var(--color-background-tertiary)}
-.page{max-width:420px;margin:0 auto;background:var(--color-background-tertiary)}
-.site-header{background:#d32f2f;padding:10px 14px;display:flex;align-items:center;gap:8px}
-.site-logo{color:#fff;font-size:17px;font-weight:500;letter-spacing:.3px}
-.site-logo span{font-size:11px;display:block;color:rgba(255,255,255,.75);font-weight:400}
-.breaking-bar{background:#b71c1c;padding:6px 14px;display:flex;align-items:center;gap:8px;overflow:hidden}
-.breaking-label{background:#fff;color:#b71c1c;font-size:10px;font-weight:500;padding:2px 6px;border-radius:3px;white-space:nowrap}
-.breaking-text{color:#fff;font-size:12px;white-space:nowrap;animation:scroll 18s linear infinite}
-@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waloryzacja emerytur 2026</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f2f4f7;
+      color: #111;
+    }
 
-.hero-card{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;text-decoration:none;display:block}
-.hero-img{width:100%;height:190px;background:linear-gradient(135deg,#b71c1c 0%,#e53935 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.hero-img-text{text-align:center;padding:16px}
-.hero-amount{font-size:52px;font-weight:500;color:#fff;line-height:1}
-.hero-amount-label{font-size:14px;color:rgba(255,255,255,.85);margin-top:4px}
-.hero-badge{position:absolute;top:10px;left:10px;background:#fff;color:#b71c1c;font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px}
-.hero-content{padding:14px}
-.hero-category{font-size:11px;color:#d32f2f;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.hero-title{font-size:19px;font-weight:500;color:var(--color-text-primary);line-height:1.3;margin-bottom:8px}
-.hero-teaser{font-size:14px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:12px}
-.hero-btn{display:inline-block;background:#d32f2f;color:#fff;font-size:13px;font-weight:500;padding:9px 18px;border-radius:var(--border-radius-md);text-decoration:none;border:none;cursor:pointer;width:100%;text-align:center}
-.hero-meta{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary)}
-.hero-time{font-size:11px;color:var(--color-text-tertiary)}
-.hero-views{font-size:11px;color:var(--color-text-tertiary);margin-left:auto}
+    .container {
+      max-width: 720px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
 
-.section-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.6px;padding:14px 14px 8px}
+    .tag {
+      display: inline-block;
+      background: #e8f0ff;
+      color: #1a57d6;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
 
-.news-card{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;text-decoration:none;display:flex;gap:0;overflow:hidden}
-.news-card:hover{background:var(--color-background-secondary)}
-.news-card-img{width:100px;min-width:100px;height:90px;background:linear-gradient(135deg,#b71c1c,#ef9a9a);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
-.news-card-img.v2{background:linear-gradient(135deg,#1565C0,#64B5F6)}
-.news-card-img.v3{background:linear-gradient(135deg,#2e7d32,#81C784)}
-.news-card-img.v4{background:linear-gradient(135deg,#6a1b9a,#CE93D8)}
-.card-img-num{font-size:26px;font-weight:500;color:#fff;line-height:1}
-.card-img-unit{font-size:10px;color:rgba(255,255,255,.8)}
-.news-card-body{padding:10px 12px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
-.news-card-cat{font-size:10px;color:#d32f2f;font-weight:500;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
-.news-card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.35;margin-bottom:4px}
-.news-card-teaser{font-size:12px;color:var(--color-text-secondary);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.news-card-meta{font-size:10px;color:var(--color-text-tertiary);margin-top:6px}
+    h1 {
+      font-size: 26px;
+      line-height: 1.3;
+      margin: 10px 0 16px;
+    }
 
-.cta-strip{background:#b71c1c;padding:14px;margin:8px 0;display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
-.cta-strip-icon{width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.cta-strip-text{flex:1}
-.cta-strip-label{font-size:11px;color:rgba(255,255,255,.75)}
-.cta-strip-title{font-size:14px;font-weight:500;color:#fff;line-height:1.3}
-.cta-strip-arrow{color:rgba(255,255,255,.7);font-size:18px}
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+    }
 
-.wide-card{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:14px;text-decoration:none;display:block;cursor:pointer}
-.wide-card:hover{background:var(--color-background-secondary)}
-.wide-card-cat{font-size:11px;color:#d32f2f;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.wide-card-title{font-size:16px;font-weight:500;color:var(--color-text-primary);line-height:1.35;margin-bottom:6px}
-.wide-card-teaser{font-size:13px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:12px}
-.wide-card-row{display:flex;align-items:center;justify-content:space-between}
-.wide-card-meta{font-size:11px;color:var(--color-text-tertiary)}
-.wide-card-btn{background:transparent;border:1px solid #d32f2f;color:#d32f2f;font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--border-radius-md);cursor:pointer;text-decoration:none}
+    .highlight {
+      background: #fff7d6;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
 
-.stats-row{display:flex;gap:1px;background:var(--color-border-tertiary);margin:8px 0}
-.stat-box{background:var(--color-background-primary);flex:1;padding:12px 10px;text-align:center}
-.stat-num{font-size:22px;font-weight:500;color:#d32f2f;line-height:1}
-.stat-label{font-size:10px;color:var(--color-text-secondary);margin-top:3px;line-height:1.3}
+    .button {
+      display: inline-block;
+      margin-top: 22px;
+      background: linear-gradient(135deg, #ff3b3b, #d60000);
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      text-align: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 8px 20px rgba(214,0,0,0.25);
+    }
 
-.footer-space{height:24px}
-</style>
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(214,0,0,0.35);
+    }
 
-<div class="page">
-  <div class="site-header">
-    <div class="site-logo">Emeryt.info <span>Wiadomości dla seniorów</span></div>
+    .footer {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="tag">NEWS • ZUS • 2026</div>
+
+    <h1>Waloryzacja emerytur 2026. O tyle wzrosną wypłaty z ZUS od maja</h1>
+
+    <p>
+      ZUS zakończył wyliczenia. Opublikowano 
+      <span class="highlight">pełną tabelę wypłat</span> 
+      dla każdej kwoty emerytury.
+    </p>
+
+    <p>
+      Znajdź swoją obecną stawkę i zobacz nową kwotę 
+      <strong>"na rękę"</strong> od maja.
+    </p>
+
+    <a class="button"
+       href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868"
+       target="_blank">
+      SPRAWDŹ TERMIN I KWOTĘ &gt;
+    </a>
+
+    <div class="footer">
+      Informacja ma charakter informacyjny i może podlegać zmianom.
+    </div>
   </div>
-
-  <div class="breaking-bar">
-    <span class="breaking-label">PILNE</span>
-    <span class="breaking-text">Waloryzacja 2026: emerytury wzrosną o 4,9% od 1 maja — sprawdź ile dostaniesz więcej</span>
-  </div>
-
-  <a class="hero-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="hero-img">
-      <span class="hero-badge">OFICJALNIE</span>
-      <div class="hero-img-text">
-        <div class="hero-amount">+4,9%</div>
-        <div class="hero-amount-label">wzrost emerytur od maja 2026</div>
-      </div>
-    </div>
-    <div class="hero-content">
-      <div class="hero-category">Emerytury 2026</div>
-      <div class="hero-title">Waloryzacja emerytur 2026. O tyle wzrosną wypłaty z ZUS od maja</div>
-      <div class="hero-teaser">Rząd zatwierdził wskaźnik waloryzacji na 4,9%. Minimalna emerytura wzrośnie o prawie 100 zł brutto już od 1 maja. Sprawdź, co to oznacza dla Twojego konta.</div>
-      <button class="hero-btn">Czytaj więcej — ile dostaniesz?</button>
-      <div class="hero-meta">
-        <span class="hero-time">Dziś, 08:30</span>
-        <span class="hero-views">47 832 wyświetleń</span>
-      </div>
-    </div>
-  </a>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">+92 zł</div><div class="stat-label">podwyżka min.<br>emerytury</div></div>
-    <div class="stat-box"><div class="stat-num">1 971 zł</div><div class="stat-label">nowa kwota<br>min. emerytury</div></div>
-    <div class="stat-box"><div class="stat-num">1 maj</div><div class="stat-label">data<br>wypłaty</div></div>
-  </div>
-
-  <div class="section-title">Więcej o waloryzacji 2026</div>
-
-  <a class="news-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="news-card-img">
-      <div class="card-img-num">92 zł</div>
-      <div class="card-img-unit">brutto więcej</div>
-    </div>
-    <div class="news-card-body">
-      <div class="news-card-cat">Minimalna emerytura</div>
-      <div class="news-card-title">Minimalna emerytura 2026: ile wyniesie po waloryzacji?</div>
-      <div class="news-card-teaser">Minimalna emerytura wzrośnie z 1 878 zł do 1 970 zł brutto. Sprawdź dokładne kwoty netto.</div>
-      <div class="news-card-meta">Dziś · 3 min czytania</div>
-    </div>
-  </a>
-
-  <a class="news-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="news-card-img v2">
-      <div class="card-img-num">5,5%</div>
-      <div class="card-img-unit">w 2025 r.</div>
-    </div>
-    <div class="news-card-body">
-      <div class="news-card-cat">Porównanie</div>
-      <div class="news-card-title">2025 vs 2026: w którym roku emeryci dostali więcej?</div>
-      <div class="news-card-teaser">W 2025 podwyżka wyniosła 5,5%. W 2026 — 4,9%. To najniższy wskaźnik od kilku lat. Dlaczego?</div>
-      <div class="news-card-meta">Dziś · 4 min czytania</div>
-    </div>
-  </a>
-
-  <a class="cta-strip" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="cta-strip-icon">🧮</div>
-    <div class="cta-strip-text">
-      <div class="cta-strip-label">Kalkulator waloryzacji</div>
-      <div class="cta-strip-title">Oblicz swoją podwyżkę — wpisz obecną emeryturę</div>
-    </div>
-    <div class="cta-strip-arrow">›</div>
-  </a>
-
-  <a class="news-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="news-card-img v3">
-      <div class="card-img-num">1 maj</div>
-      <div class="card-img-unit">2026</div>
-    </div>
-    <div class="news-card-body">
-      <div class="news-card-cat">Wypłaty ZUS</div>
-      <div class="news-card-title">Kiedy dokładnie ZUS przeleje podwyżkę? Sprawdź harmonogram</div>
-      <div class="news-card-teaser">Waloryzacja zawsze wchodzi w życie 1 maja. Dowiedz się, kiedy pieniądze pojawią się na Twoim koncie.</div>
-      <div class="news-card-meta">Dziś · 2 min czytania</div>
-    </div>
-  </a>
-
-  <a class="news-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="news-card-img v4">
-      <div class="card-img-num">+69 zł</div>
-      <div class="card-img-unit">renta</div>
-    </div>
-    <div class="news-card-body">
-      <div class="news-card-cat">Renty 2026</div>
-      <div class="news-card-title">Waloryzacja rent 2026 — o ile wzrośnie renta z tytułu niezdolności?</div>
-      <div class="news-card-teaser">Renta z częściowej niezdolności wzrośnie o 69 zł. Sprawdź nowe kwoty wszystkich świadczeń.</div>
-      <div class="news-card-meta">Dziś · 3 min czytania</div>
-    </div>
-  </a>
-
-  <div class="section-title">Artykuły powiązane</div>
-
-  <a class="wide-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="wide-card-cat">Inflacja a emerytury</div>
-    <div class="wide-card-title">Czy podwyżka o 4,9% to dużo? Eksperci: to zależy od inflacji w 2025 r.</div>
-    <div class="wide-card-teaser">Rząd zastosował minimalny wskaźnik. Jeśli inflacja okaże się wyższa niż zakładano, realna siła nabywcza emerytur może spaść.</div>
-    <div class="wide-card-row">
-      <span class="wide-card-meta">Dziś · 5 min czytania</span>
-      <a class="wide-card-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">Czytaj →</a>
-    </div>
-  </a>
-
-  <a class="wide-card" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">
-    <div class="wide-card-cat">Przyszłość systemu</div>
-    <div class="wide-card-title">Co dalej z emeryturami w Polsce? Eksperci biją na alarm</div>
-    <div class="wide-card-teaser">Starzejące się społeczeństwo, niski przyrost naturalny i zmiany na rynku pracy — to wyzwania, które zagrażają Funduszowi Ubezpieczeń Społecznych.</div>
-    <div class="wide-card-row">
-      <span class="wide-card-meta">Dziś · 6 min czytania</span>
-      <a class="wide-card-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868">Czytaj →</a>
-    </div>
-  </a>
-
-  <a class="cta-strip" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" style="background:#424242">
-    <div class="cta-strip-icon">🔔</div>
-    <div class="cta-strip-text">
-      <div class="cta-strip-label">Powiadomienia</div>
-      <div class="cta-strip-title">Zapisz się — poinformujemy Cię o każdej zmianie wypłat</div>
-    </div>
-    <div class="cta-strip-arrow">›</div>
-  </a>
-
-  <div class="footer-space"></div>
-</div>
+</body>
+</html>
