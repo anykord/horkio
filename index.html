@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmeryturaNET – Twoje Źródło Informacji o Emeryturach</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f0e;
+      --surface: #141715;
+      --surface2: #1c1f1d;
+      --border: #2a2f2c;
+      --text: #e8ebe9;
+      --muted: #7a8a80;
+      --accent: #b5e550;
+      --accent2: #e5c84a;
+      --accent3: #e55050;
+      --red: #e55050;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .topbar-date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-date::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+    .topbar-sub a {
+      color: var(--accent);
+      font-weight: 700;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 1px;
+      transition: opacity .2s;
+    }
+    .topbar-sub a:hover { opacity: .7; }
+
+    /* ── MASTHEAD ── */
+    header {
+      padding: 48px 32px 32px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .masthead-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 40px;
+    }
+    .masthead-left {}
+    .masthead-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .masthead-eyebrow::after {
+      content: '';
+      display: inline-block;
+      height: 1px;
+      width: 60px;
+      background: var(--accent);
+    }
+    .masthead-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(52px, 8vw, 96px);
+      line-height: 0.9;
+      letter-spacing: -.03em;
+      color: var(--text);
+    }
+    .masthead-logo em {
+      font-style: normal;
+      color: var(--accent);
+      position: relative;
+    }
+    .masthead-logo em::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 4px;
+      height: 3px;
+      background: var(--accent);
+    }
+    .masthead-tagline {
+      margin-top: 18px;
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 520px;
+    }
+    .masthead-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-left: 1px solid var(--border);
+      padding-left: 40px;
+    }
+    .stat-item {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+    }
+    .stat-num {
+      font-size: 28px;
+      color: var(--accent2);
+      display: block;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 0;
+    }
+    nav ul li a {
+      display: block;
+      padding: 14px 16px;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color .2s;
+      position: relative;
+    }
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 16px; right: 16px;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform .2s;
+    }
+    nav ul li a:hover,
+    nav ul li a.active { color: var(--text); }
+    nav ul li a:hover::after,
+    nav ul li a.active::after { transform: scaleX(1); }
+    .nav-kalkulator a {
+      background: var(--accent);
+      color: var(--bg) !important;
+      padding: 8px 18px !important;
+      font-size: 11px !important;
+    }
+    .nav-kalkulator a::after { display: none !important; }
+    .nav-kalkulator a:hover { opacity: .85; }
+
+    /* ── LAYOUT WRAPPER ── */
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .section-label-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .section-label-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-label-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--border);
+    }
+
+    /* ── HERO LAYOUT ── */
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      grid-template-rows: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+    .hero-main-card {
+      grid-row: 1 / 3;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background .3s;
+    }
+    .hero-main-card:hover { background: var(--surface2); }
+    .hero-side-card {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background .3s;
+    }
+    .hero-side-card:hover { background: var(--surface2); }
+
+    /* Card image */
+    .card-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(30%) contrast(1.05);
+      transition: filter .4s, transform .6s;
+    }
+    .hero-main-card .card-image { aspect-ratio: 3/2; }
+    .hero-main-card:hover .card-image,
+    .hero-side-card:hover .card-image { filter: grayscale(0%) contrast(1.05); transform: scale(1.02); }
+    .card-image-wrap { overflow: hidden; }
+
+    /* Card body */
+    .card-body {
+      padding: 24px 28px 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-side-card .card-body { padding: 18px 22px; }
+
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 3px 8px;
+      margin-bottom: 14px;
+      align-self: flex-start;
+    }
+    .tag-red { background: var(--accent3); }
+    .tag-gold { background: var(--accent2); }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .hero-main-card .card-title { font-size: clamp(22px, 2.5vw, 30px); }
+    .hero-side-card .card-title { font-size: 16px; }
+
+    .card-excerpt {
+      font-family: 'Newsreader', serif;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .hero-side-card .card-excerpt {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .card-meta-info {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .read-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      transition: gap .2s, opacity .2s;
+    }
+    .read-btn:hover { gap: 14px; opacity: .8; }
+    .read-btn::after { content: '→'; }
+
+    /* ── MEDIUM GRID ── */
+    .medium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 2px;
+    }
+    .medium-card {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background .3s;
+    }
+    .medium-card:hover { background: var(--surface2); }
+    .medium-card .card-body { padding: 22px; }
+    .medium-card .card-title { font-size: 17px; }
+    .medium-card .card-image { aspect-ratio: 16/9; }
+    .medium-card:hover .card-image { filter: grayscale(0%); transform: scale(1.02); }
+
+    /* ── ANALYSIS STRIP ── */
+    .analysis-section { margin-top: 60px; }
+
+    .wide-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      overflow: hidden;
+      margin-bottom: 2px;
+      transition: background .3s;
+    }
+    .wide-card:hover { background: var(--surface2); }
+    .wide-card.reverse { grid-template-columns: 1fr 420px; }
+    .wide-card-img {
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      object-fit: cover;
+      filter: grayscale(25%) contrast(1.05);
+      transition: filter .4s;
+    }
+    .wide-card:hover .wide-card-img { filter: grayscale(0%); }
+    .wide-card-body {
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+    }
+    .wide-card .card-title { font-size: 24px; }
+    .wide-card .card-excerpt { font-size: 15px; }
+
+    /* ── NUMBER HIGHLIGHT ── */
+    .num-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
+    }
+    .num-item {
+      background: var(--surface);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .num-big {
+      font-family: 'Syne', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--accent);
+    }
+    .num-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .num-desc {
+      font-size: 13px;
+      color: var(--muted);
+      font-family: 'Newsreader', serif;
+      margin-top: 4px;
+    }
+
+    /* ── BOTTOM 2-GRID ── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 2px;
+    }
+    .bottom-card {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background .3s;
+    }
+    .bottom-card:hover { background: var(--surface2); }
+    .bottom-card .card-body { padding: 26px; }
+    .bottom-card .card-title { font-size: 20px; }
+    .bottom-card:hover .card-image { filter: grayscale(0%); transform: scale(1.02); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 56px 0 48px;
+      color: var(--border);
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--border); }
+    .divider-icon {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 56px 32px 40px;
+      margin-top: 80px;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 60px;
+      margin-bottom: 48px;
+    }
+    .footer-brand-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .footer-brand-logo em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .footer-brand-tagline {
+      font-size: 13px;
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+    .footer-links-group h4 {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .footer-links-group ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+    .footer-links-group li a {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      transition: color .2s;
+    }
+    .footer-links-group li a:hover { color: var(--text); }
+    .footer-newsletter-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+    }
+    .newsletter-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-right: none;
+      padding: 10px 14px;
+      font-family: 'Newsreader', serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .newsletter-input:focus { border-color: var(--accent); }
+    .newsletter-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 10px 18px;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .newsletter-btn:hover { opacity: .85; }
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .footer-legal {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--border);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-layout, .medium-grid, .wide-card, .num-strip, .bottom-grid {
+      animation: fadeInUp .6s ease both;
+    }
+    .medium-grid { animation-delay: .1s; }
+    .wide-card:nth-child(2) { animation-delay: .15s; }
+    .num-strip { animation-delay: .2s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .hero-layout { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .hero-main-card { grid-row: auto; }
+      .medium-grid { grid-template-columns: 1fr; }
+      .wide-card, .wide-card.reverse { grid-template-columns: 1fr; }
+      .wide-card-img { min-height: 220px; }
+      .num-strip { grid-template-columns: 1fr 1fr; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .masthead-inner { grid-template-columns: 1fr; }
+      .masthead-stats { display: none; }
+      nav ul { flex-wrap: wrap; }
+      .main-content { padding: 32px 20px; }
+      header { padding: 32px 20px 24px; }
+      .topbar { padding: 0 20px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-date">Piątek, 1 maja 2026</div>
+  <span style="font-size:10px;letter-spacing:.08em;">Niezależny serwis informacyjny o emeryturach i systemie rentowym</span>
+  <div class="topbar-sub"><a href="#">↗ Newsletter</a></div>
+</div>
+
+<!-- MASTHEAD -->
+<header>
+  <div class="masthead-inner">
+    <div class="masthead-left">
+      <div class="masthead-eyebrow">Niezależny serwis emerytalny</div>
+      <div class="masthead-logo">Emerytura<em>NET</em></div>
+      <div class="masthead-tagline">Rzetelne informacje o emeryturach, rentach i świadczeniach — bez zbędnego żargonu.</div>
+    </div>
+    <div class="masthead-stats">
+      <div class="stat-item">
+        <span class="stat-num">+7.82%</span>
+        <span class="stat-label">Wskaźnik waloryzacji 2026</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">1 921 zł</span>
+        <span class="stat-label">Min. emerytura po marcu</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">8.7M</span>
+        <span class="stat-label">Świadczeniobiorców ZUS</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <ul>
+      <li><a href="#" class="active">Aktualności</a></li>
+      <li><a href="#">ZUS i FUS</a></li>
+      <li><a href="#">Reforma</a></li>
+      <li><a href="#">Waloryzacja</a></li>
+      <li><a href="#">PPK / OFE</a></li>
+      <li><a href="#">Porady</a></li>
+      <li><a href="#">Prawo</a></li>
+    </ul>
+    <ul>
+      <li class="nav-kalkulator"><a href="#">Kalkulator</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- SECTION LABEL -->
+  <div class="section-label">
+    <span class="section-label-text">Najważniejsze dziś</span>
+    <div class="section-label-line"></div>
+    <span class="section-label-num">01</span>
+  </div>
+
+  <!-- HERO GRID -->
+  <div class="hero-layout">
+
+    <!-- MAIN HERO -->
+    <div class="hero-main-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80"
+          alt="Waloryzacja emerytur 2026" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Waloryzacja</span>
+        <h2 class="card-title">Waloryzacja emerytur 2026: kto dostanie najwięcej i o ile wzrosną świadczenia od marca?</h2>
+        <p class="card-excerpt">Ministerstwo Rodziny ogłosiło szczegółowe dane dotyczące tegorocznej waloryzacji emerytur i rent. Wskaźnik waloryzacji wyniesie rekordowe wartości dla wielu grup świadczeniobiorców. Eksperci analizują, kto skorzysta najbardziej i jakie kroki podjąć, by zmaksymalizować swoje świadczenie.</p>
+        <div class="card-footer">
+          <div class="card-meta-info">
+            <span>1 MAJ 2026</span>
+            <span>red. J. Kowalczyk</span>
+            <span>5 MIN</span>
+          </div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDE 1 -->
+    <div class="hero-side-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&q=75"
+          alt="Wiek emerytalny" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag tag-red">Reforma</span>
+        <h3 class="card-title">Rząd rozważa zmianę wieku emerytalnego — nowe analizy demograficzne GUS</h3>
+        <p class="card-excerpt">Nowe dane wywołały burzliwą dyskusję w koalicji rządzącej na temat przyszłości systemu emerytalnego.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>30 KWI 2026</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDE 2 -->
+    <div class="hero-side-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=75"
+          alt="Trzynasta emerytura" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag tag-gold">Świadczenia dodatkowe</span>
+        <h3 class="card-title">„Trzynastka" i „czternastka" 2026 — terminy wypłat i kwoty już znane</h3>
+        <p class="card-excerpt">ZUS potwierdził harmonogram dodatkowych świadczeń rocznych. Sprawdź, kiedy i ile trafi na konto.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>29 KWI 2026</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hero-layout -->
+
+  <!-- MEDIUM GRID -->
+  <div class="medium-grid">
+
+    <div class="medium-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=75"
+          alt="ZUS aplikacja" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">ZUS</span>
+        <h3 class="card-title">ZUS uruchamia nową aplikację mobilną — sprawdź stan konta emerytalnego w telefonie</h3>
+        <p class="card-excerpt">Zakład zakończył wdrożenie zmodernizowanej platformy cyfrowej. Każdy ubezpieczony zobaczy zgromadzone składki i szacowaną emeryturę w czasie rzeczywistym.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>28 KWI 2026</span><span>P. Nowak</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="medium-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&q=75"
+          alt="Emerytura minimalna" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag tag-gold">Min. świadczenia</span>
+        <h3 class="card-title">Minimalna emerytura w 2026 r. przekroczyła 1 900 zł — co to oznacza dla najuboższych?</h3>
+        <p class="card-excerpt">Po marcowej waloryzacji minimalne emerytury osiągnęły historyczny pułap. Eksperci ostrzegają jednak, że realny wzrost siły nabywczej pozostaje skromny.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>27 KWI 2026</span><span>M. Wiśniewska</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="medium-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=600&q=75"
+          alt="PPK oszczędności" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">PPK</span>
+        <h3 class="card-title">PPK po pięciu latach — kto naprawdę zarobił i czy warto przystąpić w 2026 roku?</h3>
+        <p class="card-excerpt">Pracownicze Plany Kapitałowe świętują piątą rocznicę. Redakcja przeanalizowała wyniki funduszy i realne stopy zwrotu dla uczestników.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>26 KWI 2026</span><span>T. Jabłoński</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /medium-grid -->
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span class="divider-icon">◆ ANALIZA I KOMENTARZE ◆</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- SECTION LABEL -->
+  <div class="section-label">
+    <span class="section-label-text">Analiza i komentarze</span>
+    <div class="section-label-line"></div>
+    <span class="section-label-num">02</span>
+  </div>
+
+  <!-- WIDE CARD 1 -->
+  <div class="wide-card">
+    <div class="card-image-wrap">
+      <img class="wide-card-img"
+        src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700&q=75"
+        alt="Emeryt i praca" />
+    </div>
+    <div class="wide-card-body">
+      <span class="card-tag">Prawo pracy</span>
+      <h3 class="card-title">Emeryt może pracować bez utraty świadczeń — ale są warunki. Limity dorabiania 2026</h3>
+      <p class="card-excerpt">Wielu seniorów zastanawia się, czy podjęcie pracy nie zagrozi ich świadczeniom. Zmiany przepisów z ostatnich miesięcy zmodyfikowały zasady łączenia emerytury z zatrudnieniem. Wyjaśniamy, jakie progi zarobkowe obowiązują i kiedy ZUS może zawiesić wypłatę świadczenia.</p>
+      <div class="card-footer">
+        <div class="card-meta-info"><span>25 KWI 2026</span><span>red. A. Lewandowska</span><span>7 MIN</span></div>
+        <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIDE CARD 2 (reversed) -->
+  <div class="wide-card reverse" style="margin-top:2px;">
+    <div class="wide-card-body">
+      <span class="card-tag tag-gold">Emerytury zagraniczne</span>
+      <h3 class="card-title">Polacy pracujący za granicą a emerytura w Polsce — jak zsumować okresy składkowe z krajów UE?</h3>
+      <p class="card-excerpt">Setki tysięcy Polaków wracają po latach pracy w Niemczech, Holandii czy Norwegii. Jak ZUS przelicza zagraniczne okresy składkowe? Kiedy opłaca się emerytura łączona, a kiedy wnioskować osobno? Prawnik wyjaśnia krok po kroku.</p>
+      <div class="card-footer">
+        <div class="card-meta-info"><span>24 KWI 2026</span><span>red. K. Dąbrowski</span><span>9 MIN</span></div>
+        <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+      </div>
+    </div>
+    <div class="card-image-wrap">
+      <img class="wide-card-img"
+        src="https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=700&q=75"
+        alt="Europa emerytury" />
+    </div>
+  </div>
+
+  <!-- NUMBERS STRIP -->
+  <div class="num-strip">
+    <div class="num-item">
+      <span class="num-big">+7.82%</span>
+      <span class="num-label">Waloryzacja 2026</span>
+      <span class="num-desc">Wskaźnik obowiązujący od 1 marca 2026 r.</span>
+    </div>
+    <div class="num-item">
+      <span class="num-big">1 921 zł</span>
+      <span class="num-label">Minimalna emerytura</span>
+      <span class="num-desc">Historyczny próg po marcowej waloryzacji</span>
+    </div>
+    <div class="num-item">
+      <span class="num-big">65 / 60</span>
+      <span class="num-label">Wiek emerytalny (M/K)</span>
+      <span class="num-desc">Obowiązujący próg — reforma wciąż w debacie</span>
+    </div>
+    <div class="num-item">
+      <span class="num-big">3.5M</span>
+      <span class="num-label">Uczestników PPK</span>
+      <span class="num-desc">Stan na Q1 2026, wzrost o 8% r/r</span>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span class="divider-icon">◆ PORADY I PORADNIKI ◆</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- SECTION LABEL -->
+  <div class="section-label">
+    <span class="section-label-text">Porady i poradniki</span>
+    <div class="section-label-line"></div>
+    <span class="section-label-num">03</span>
+  </div>
+
+  <!-- BOTTOM 2-GRID -->
+  <div class="bottom-grid">
+
+    <div class="bottom-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=75"
+          alt="Dokumenty emerytura" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Poradnik</span>
+        <h3 class="card-title">Wniosek o emeryturę krok po kroku — jakie dokumenty zebrać i kiedy złożyć, by nie stracić ani złotówki?</h3>
+        <p class="card-excerpt">Prawidłowe złożenie wniosku emerytalnego może decydować o wysokości świadczenia przez całe życie. Ekspert przygotował kompletną listę dokumentów, terminarz oraz najczęstsze kosztowne błędy.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>23 KWI 2026</span><span>red. B. Zając</span><span>10 MIN</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-card">
+      <div class="card-image-wrap">
+        <img class="card-image"
+          src="https://images.unsplash.com/photo-1609921212029-bb5a28e60960?w=600&q=75"
+          alt="Wcześniejsza emerytura" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag tag-red">Wcześniejsza emerytura</span>
+        <h3 class="card-title">Kto może przejść na emeryturę wcześniej? Pełna lista zawodów i warunków — 2026 r.</h3>
+        <p class="card-excerpt">Górnicy, nauczyciele, służby mundurowe, pracownicy kolei i wiele innych grup wciąż może liczyć na wcześniejszą emeryturę. Zebraliśmy aktualne warunki i sprawdzamy, czy obniżony wiek naprawdę się opłaca.</p>
+        <div class="card-footer">
+          <div class="card-meta-info"><span>22 KWI 2026</span><span>red. W. Kucharski</span><span>8 MIN</span></div>
+          <a class="read-btn" href="https://pressreportzone.com/v1/short/221464?stream_uuid=9d6f21df-a197-4fbf-85ec-ae9e54206868" target="_blank" rel="noopener">Czytaj</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /bottom-grid -->
+
+</div><!-- /main-content -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-logo">Emerytura<em>NET</em></div>
+      <div class="footer-brand-tagline">Niezależny serwis informacyjny o emeryturach, rentach i świadczeniach społecznych w Polsce.</div>
+    </div>
+    <div class="footer-links-group">
+      <h4>Nawigacja</h4>
+      <ul>
+        <li><a href="#">O redakcji</a></li>
+        <li><a href="#">Polityka prywatności</a></li>
+        <li><a href="#">Regulamin</a></li>
+        <li><a href="#">Kontakt</a></li>
+        <li><a href="#">Reklama</a></li>
+        <li><a href="#">Mapa serwisu</a></li>
+        <li><a href="#">ZUS i FUS</a></li>
+        <li><a href="#">Kalkulator emerytalny</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-newsletter-label">Newsletter</div>
+      <div class="newsletter-form">
+        <input class="newsletter-input" type="email" placeholder="twój@email.pl" />
+        <button class="newsletter-btn">Zapisz</button>
+      </div>
+      <p style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:10px;line-height:1.6;">Cotygodniowy przegląd zmian w przepisach emerytalnych. Bez spamu.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">
+      © 2026 EmeryturaNET<br>
+      Serwis ma charakter informacyjny i nie stanowi porady prawnej ani finansowej.
+    </div>
+    <div class="footer-legal">Wszelkie decyzje emerytalne konsultuj z doradcą ZUS lub prawnikiem.</div>
+  </div>
+</footer>
+
+</body>
+</html>
